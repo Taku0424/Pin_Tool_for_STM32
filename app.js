@@ -258,7 +258,10 @@ function groupBySide(pins) {
 
 function renderPin(pin, side, position, count, layout) {
   const metrics = pinMetrics(side, position, count, layout);
-  const item = div(`pin ${pin.name === state.activePin ? "active" : ""}`, pin.name);
+  const item = div(
+    `pin ${pin.name === state.activePin ? "active" : ""} ${pin.roleLabel ? "search-match" : ""}`,
+    pin.name,
+  );
   item.style.left = `${metrics.x}px`;
   item.style.top = `${metrics.y}px`;
   item.style.width = `${metrics.w}px`;

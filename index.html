@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>STM32 Pin Tool</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="panel controls">
+        <h1>STM32 Pin Tool</h1>
+
+        <label class="field">
+          <span>MCU</span>
+          <select id="mcuSelect"></select>
+        </label>
+
+        <label class="field">
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="USART, GPIO, TIM...">
+        </label>
+
+        <div class="button-row">
+          <button id="openCsvButton" type="button">Open CSV</button>
+          <button id="saveCsvButton" type="button">Save CSV</button>
+          <input id="csvFileInput" type="file" accept=".csv,text/csv" hidden>
+        </div>
+
+        <section class="legend" aria-label="Legend">
+          <h2>Legend</h2>
+          <div class="legend-row"><span style="background:#bbf7d0"></span>FT</div>
+          <div class="legend-row"><span style="background:#4ade80"></span>FTf</div>
+          <div class="legend-row"><span style="background:#fed7aa"></span>TT</div>
+          <div class="legend-row"><span style="background:#fde68a"></span>TTA</div>
+          <div class="legend-row"><span style="background:#ddd6fe"></span>Reserved</div>
+          <div class="legend-row"><span style="background:#e2e8f0"></span>power</div>
+        </section>
+      </aside>
+
+      <section class="package-panel">
+        <div id="packageCanvas" class="package-canvas" aria-label="Pin package view"></div>
+      </section>
+
+      <aside class="panel details">
+        <h2>Pin Info</h2>
+        <div id="pinInfo" class="pin-info"></div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <span>Independent project; not affiliated with or endorsed by STMicroelectronics.</span>
+      <span>
+        <a href="LICENSE">App license (MIT)</a>
+        ·
+        <a href="THIRD_PARTY_LICENSES.md">Third-party licenses</a>
+      </span>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="data/embedded-csv.js"></script>
+    <script src="app.js?v=9"></script>
+  </body>
+</html>

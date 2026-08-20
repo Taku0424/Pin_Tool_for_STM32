@@ -1,0 +1,3 @@
+﻿mcu,package,pin_count
+STM32F446RETx,LQFP64,64
+STM32F303K8Tx,LQFP32,32

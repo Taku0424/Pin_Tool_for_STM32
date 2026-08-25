@@ -1,0 +1,11 @@
+{
+  "name": "stm32-pin-labeler-web",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Browser-only STM32 pin label helper for KiCad clipboard selections",
+  "scripts": {
+    "build": "node --check app.js && node --check kicad-template.js && node --check pin-settings.js",
+    "test": "node --test tests/*.test.js",
+    "sync-data": "node tools/build-embedded-csv.js"
+  }
+}

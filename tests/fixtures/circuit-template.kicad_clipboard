@@ -1,0 +1,97 @@
+(lib_symbols
+    (symbol "MCU_ST_STM32F4:STM32F446RETx"
+        (symbol "STM32F446RETx_1_1"
+            (pin bidirectional line
+                (at -5.08 2.54 0) (length 2.54)
+                (name "PA9" (effects (font (size 1.27 1.27))))
+                (number "1" (effects (font (size 1.27 1.27))))
+            )
+            (pin bidirectional line
+                (at 5.08 0 180) (length 2.54)
+                (name "PA10" (effects (font (size 1.27 1.27))))
+                (number "2" (effects (font (size 1.27 1.27))))
+            )
+            (pin power_in line
+                (at 0 -5.08 90) (length 2.54)
+                (name "VDD" (effects (font (size 1.27 1.27))))
+                (number "3" (effects (font (size 1.27 1.27))))
+            )
+        )
+    )
+    (symbol "Device:R"
+        (symbol "R_1_1"
+            (pin passive line
+                (at -2.54 0 0) (length 1.27)
+                (name "~" (effects (font (size 1.27 1.27))))
+                (number "1" (effects (font (size 1.27 1.27))))
+            )
+            (pin passive line
+                (at 2.54 0 180) (length 1.27)
+                (name "~" (effects (font (size 1.27 1.27))))
+                (number "2" (effects (font (size 1.27 1.27))))
+            )
+        )
+    )
+)
+(wire
+    (pts (xy 45.72 48.26) (xy 40.64 48.26))
+    (stroke (width 0) (type default))
+    (uuid "10000000-0000-4000-8000-000000000001")
+)
+(wire
+    (pts (xy 35.56 48.26) (xy 30.48 48.26))
+    (stroke (width 0) (type default))
+    (uuid "10000000-0000-4000-8000-000000000002")
+)
+(global_label "OLD_BUTTON"
+    (shape bidirectional)
+    (at 43.18 48.26 180)
+    (effects (font (size 1.27 1.27)))
+    (uuid "10000000-0000-4000-8000-000000000003")
+)
+(hierarchical_label "OLD_BUTTON"
+    (shape bidirectional)
+    (at 80 80 0)
+    (effects (font (size 1.27 1.27)))
+    (uuid "10000000-0000-4000-8000-000000000004")
+)
+(global_label "VDD"
+    (shape power_in)
+    (at 30.48 48.26 180)
+    (effects (font (size 1.27 1.27)))
+    (uuid "10000000-0000-4000-8000-000000000005")
+)
+(global_label "OLD_UART"
+    (shape input)
+    (at 55.88 50.8 0)
+    (effects (font (size 1.27 1.27)))
+    (uuid "10000000-0000-4000-8000-000000000006")
+)
+(global_label "NRST"
+    (shape input)
+    (at 70 70 0)
+    (effects (font (size 1.27 1.27)))
+    (uuid "10000000-0000-4000-8000-000000000007")
+)
+(symbol
+    (lib_id "MCU_ST_STM32F4:STM32F446RETx")
+    (at 50.8 50.8 0)
+    (unit 1)
+    (uuid "20000000-0000-4000-8000-000000000001")
+    (property "Reference" "U1" (at 50.8 40.64 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "STM32F446RETx" (at 50.8 43.18 0) (effects (font (size 1.27 1.27))))
+    (pin "1" (uuid "20000000-0000-4000-8000-000000000002"))
+    (pin "2" (uuid "20000000-0000-4000-8000-000000000003"))
+    (pin "3" (uuid "20000000-0000-4000-8000-000000000004"))
+)
+(symbol
+    (lib_id "Device:R")
+    (at 38.1 48.26 0)
+    (unit 1)
+    (uuid "30000000-0000-4000-8000-000000000001")
+    (property "Reference" "R1" (at 38.1 45.72 0) (effects (font (size 1.27 1.27))))
+    (property "Value" "10k" (at 38.1 48.26 0) (effects (font (size 1.27 1.27))))
+    (property "Footprint" "Resistor_SMD:R_0603" (at 38.1 50.8 0) (effects (font (size 1.27 1.27))))
+    (pin "1" (uuid "30000000-0000-4000-8000-000000000002"))
+    (pin "2" (uuid "30000000-0000-4000-8000-000000000003"))
+)

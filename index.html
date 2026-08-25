@@ -3,62 +3,125 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>STM32 Pin Tool</title>
-    <link rel="stylesheet" href="styles.css?v=3">
+    <title>STM32 Pin Labeler for KiCad</title>
+    <meta name="description" content="KiCadでコピーしたSTM32回路へ、選択したピン機能のラベルをブラウザ内で追加します。">
+    <meta property="og:title" content="STM32 Pin Labeler">
+    <meta property="og:description" content="KiCadでコピーしたSTM32回路へ、選択したピン機能のラベルをブラウザ内で追加します。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/og.png">
+    <meta property="og:image:alt" content="STM32 Pin Labeler technical preview card">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="STM32 Pin Labeler">
+    <meta name="twitter:description" content="KiCadでコピーしたSTM32回路へ、選択したピン機能のラベルをブラウザ内で追加します。">
+    <meta name="twitter:image" content="assets/og.png">
+    <meta name="twitter:image:alt" content="STM32 Pin Labeler technical preview card">
+    <link rel="stylesheet" href="styles.css?v=6">
   </head>
   <body>
+    <header class="window-bar">
+      <h1>STM32 ピン設定アシスタント</h1>
+      <nav aria-label="ヘルプ">
+        <a href="README.md" target="_blank" rel="noopener">使い方</a>
+        <a href="THIRD_PARTY_LICENSES.md" target="_blank" rel="noopener">このアプリについて</a>
+      </nav>
+    </header>
+
     <main class="app-shell">
       <aside class="panel controls">
-        <h1>STM32 Pin Tool</h1>
-
         <label class="field">
           <span>MCU</span>
           <select id="mcuSelect"></select>
         </label>
 
         <label class="field">
-          <span>Search</span>
+          <span>機能を検索</span>
           <input id="searchInput" type="search" placeholder="USART, GPIO, TIM...">
         </label>
 
-        <div class="button-row">
-          <button id="openCsvButton" type="button">Open CSV</button>
-          <button id="saveCsvButton" type="button">Save CSV</button>
-          <input id="csvFileInput" type="file" accept=".csv,text/csv" hidden>
-        </div>
+        <button id="saveCsvButton" class="secondary-button full-button" type="button">CSVを保存</button>
+        <button id="openCsvButton" class="secondary-button full-button" type="button">CSVを開く</button>
+        <input id="csvFileInput" type="file" accept=".csv,text/csv" hidden>
+
+        <label class="field label-type-field">
+          <span>ラベルの種類</span>
+          <select id="labelTypeSelect">
+            <option value="global">グローバルラベル</option>
+            <option value="hierarchical">階層ラベル</option>
+          </select>
+        </label>
+
+        <button id="transformButton" class="full-button primary-action" type="button">KiCadへコピー</button>
+        <div id="transformSummary" class="apply-status" role="status">KiCad回路を読み込んでください。</div>
 
         <section class="legend" aria-label="Legend">
-          <h2>Legend</h2>
-          <div class="legend-row"><span style="background:#bbf7d0"></span>FT</div>
-          <div class="legend-row"><span style="background:#4ade80"></span>FTf</div>
-          <div class="legend-row"><span style="background:#fed7aa"></span>TT</div>
-          <div class="legend-row"><span style="background:#fde68a"></span>TTA</div>
-          <div class="legend-row"><span style="background:#ddd6fe"></span>Reserved</div>
-          <div class="legend-row"><span style="background:#e2e8f0"></span>power</div>
+          <h2>凡例</h2>
+          <div class="legend-row"><span style="background:#bbf7d0"></span>FT（未選択）</div>
+          <div class="legend-row"><span style="background:#4ade80"></span>FTf（未選択）</div>
+          <div class="legend-row"><span style="background:#fed7aa"></span>TT/GPIO（未選択）</div>
+          <div class="legend-row"><span style="background:#fde68a"></span>TTA（未選択）</div>
+          <div class="legend-row"><span style="background:#ddd6fe"></span>予約ピン</div>
+          <div class="legend-row"><span style="background:#e2e8f0"></span>電源ピン</div>
         </section>
       </aside>
 
       <section class="package-panel">
-        <div id="packageCanvas" class="package-canvas" aria-label="Pin package view"></div>
+        <div id="packageStage" class="package-stage">
+          <div id="packageCanvas" class="package-canvas" aria-label="ピン配置図"></div>
+        </div>
       </section>
 
       <aside class="panel details">
-        <h2>Pin Info</h2>
-        <div id="pinInfo" class="pin-info"></div>
+        <div class="tab-list" role="tablist" aria-label="設定パネル">
+          <button id="pinDetailsTab" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="pinDetailsPanel" data-tab-target="details">ピン詳細</button>
+          <button id="labelSettingsTab" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="labelSettingsPanel" data-tab-target="labels">ラベル設定</button>
+          <button id="kicadCircuitTab" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="kicadCircuitPanel" data-tab-target="kicad">KiCad回路</button>
+        </div>
+
+        <section id="pinDetailsPanel" class="tab-panel active" role="tabpanel" aria-labelledby="pinDetailsTab" data-tab-panel="details">
+          <div id="pinInfo" class="pin-info"></div>
+        </section>
+
+        <section id="labelSettingsPanel" class="tab-panel" role="tabpanel" aria-labelledby="labelSettingsTab" data-tab-panel="labels" hidden>
+          <p class="panel-help">設定済みピンの機能名、ラベル名、電気タイプを編集できます。</p>
+          <div id="labelSettings" class="label-settings"></div>
+        </section>
+
+        <section id="kicadCircuitPanel" class="tab-panel" role="tabpanel" aria-labelledby="kicadCircuitTab" data-tab-panel="kicad" hidden>
+          <p class="panel-help">KiCadでSTM32と周辺回路を選択してコピーし、下のボタンで読み込みます。</p>
+          <button id="pasteTemplateButton" class="full-button" type="button">クリップボードから読み込む</button>
+          <div id="templateStatus" class="status-card" role="status">回路はまだ読み込まれていません。</div>
+          <div id="transformDetails" class="transform-details" aria-live="polite"></div>
+
+          <details id="manualInputDetails" class="fallback-details">
+            <summary>手動で回路データを貼り付ける</summary>
+            <label class="sr-only" for="templateInput">KiCad回路データ</label>
+            <textarea id="templateInput" class="clipboard-area" rows="10" placeholder="この欄を選択してCtrl+V"></textarea>
+            <button id="inspectTemplateButton" class="secondary-button full-button" type="button">貼り付け内容を読み込む</button>
+          </details>
+
+          <details id="manualOutputDetails" class="fallback-details">
+            <summary>変換結果を手動でコピーする</summary>
+            <label class="sr-only" for="templateOutput">変換後のKiCad回路データ</label>
+            <textarea id="templateOutput" class="clipboard-area" rows="10" readonly placeholder="変換結果がここに表示されます"></textarea>
+            <button id="copyOutputButton" class="secondary-button full-button" type="button" disabled>変換結果をコピー</button>
+          </details>
+        </section>
       </aside>
     </main>
 
-    <footer class="site-footer">
-      <span>Independent project; not affiliated with or endorsed by STMicroelectronics.</span>
+    <footer class="status-bar">
+      <span>回路データはブラウザ内だけで処理されます。</span>
       <span>
-        <a href="LICENSE">App license (MIT)</a>
+        <a href="LICENSE">MIT License</a>
         ·
-        <a href="THIRD_PARTY_LICENSES.md">Third-party licenses</a>
+        <a href="THIRD_PARTY_LICENSES.md">第三者ライセンス</a>
       </span>
     </footer>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script src="data/embedded-csv.js"></script>
-    <script src="app.js?v=10"></script>
+    <script src="data/embedded-csv.js?v=2"></script>
+    <script src="pin-settings.js?v=1"></script>
+    <script src="kicad-template.js?v=1"></script>
+    <script src="app.js?v=14"></script>
   </body>
 </html>
